@@ -61,46 +61,46 @@
         $(".demo").wrap("<form id='myupload' action='/upload' method='post' enctype='multipart/form-data'></form>");
         //点击上传图片
         $("#fileupload").change(function(){
-            //提交表单
-            $("#myupload").ajaxSubmit({
-                dataType:  'json',
-                beforeSend: function() {
-
-                    //显示进度条
-                    progress.show();
-                    //进度条为0
-                    var percentVal = '0%';
-                    bar.width(percentVal);
-                    percent.html(percentVal);
-                    btn.html("Upload");
-                },
-                //上传进度
-                uploadProgress: function(event, position, total, percentComplete) {
-                    //进度条加载长度数据是number型
-                    var percentVal = percentComplete + '%';
-                    bar.width(percentVal);
-                    percent.html(percentVal);
-                },
-                success: function(data) {
-                    var html1 = "";
-                    var html2 = "";
-                    for (var i = 0; i < data.length; i++) {
-                        html1 = html1 + "<img width='60%' src='"+data[i].pic+"'><br>" + "<b>"+data[i].name+"</b><br><b>"+data[i].size+"</b><br>"
-                    }
-
-                    //上传成功返回参数
-                    //files.html("<b>"+data.name+"</b><br><b>"+data.size+"</b>");
-                    showimg.html(html1);
-                    btn.html("Upload");
-                },
-                error:function(xhr){
-                    //上传失败
-                    btn.html("Upload fail");
-                    bar.width('0')
-                    files.html(xhr.responseText);
-                },
-                clearForm: true
-            });
+            if($('#fileupload').val()!=''){
+                //提交表单
+                $("#myupload").ajaxSubmit({
+                    dataType:  'json',
+                    beforeSend: function() {
+                        //显示进度条
+                        progress.show();
+                        //进度条为0
+                        var percentVal = '0%';
+                        bar.width(percentVal);
+                        percent.html(percentVal);
+                        btn.html("Upload");
+                    },
+                    //上传进度
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        //进度条加载长度数据是number型
+                        var percentVal = percentComplete + '%';
+                        bar.width(percentVal);
+                        percent.html(percentVal);
+                    },
+                    success: function(data) {
+                        var html1 = "";
+                        var html2 = "";
+                        for (var i = 0; i < data.length; i++) {
+                            html1 = html1 + "<img width='60%' src='"+data[i].pic+"'><br>" + "<b>"+data[i].name+"</b><br><b>"+data[i].size+"</b><br>"
+                        }
+                        //上传成功返回参数
+                        //files.html("<b>"+data.name+"</b><br><b>"+data.size+"</b>");
+                        showimg.html(html1);
+                        btn.html("Upload");
+                    },
+                    error:function(xhr){
+                        //上传失败
+                        btn.html("Upload fail");
+                        bar.width('0')
+                        files.html(xhr.responseText);
+                    },
+                    clearForm: true
+                });
+            }
         });
 
         //删除图片js

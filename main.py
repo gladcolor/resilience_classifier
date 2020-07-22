@@ -90,8 +90,10 @@ def api_upload():
         os.makedirs(file_dir)
     files=request.files['files']  # 从表单的file字段获取文件，myfile为该表单的name值
     res = []
+    unix_time = int(time.time())
+    i = 0
     for f in request.files.getlist('files'):
-        # print(type(f))
+        i = i + 1
         if f and allowed_file(f.filename):  # 判断是否是允许上传的文件类型
             fname=secure_filename(f.filename)
             arr = fname.rsplit('.',1)
@@ -100,8 +102,7 @@ def api_upload():
                 ext = arr[1]
             else:
                 ext = fname
-            unix_time = int(time.time())
-            new_filename=str(unix_time)+'.'+ext  # 修改了上传的文件名
+            new_filename=str(unix_time) + '_' + str(i) +'.'+ext  # 修改了上传的文件名
             real_filepath = os.path.join(file_dir,new_filename)
             print(real_filepath)
             f.save(os.path.join(file_dir,new_filename))  #保存文件到upload目录
