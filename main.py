@@ -19,32 +19,40 @@ import numpy as np
 from torchvision import datasets, models, transforms
 
 class ImageClassifier():
-    def __init__(self, model_path=None):
+    def __init__(self, model_path, input_size=299, device='cpu'):
+
         """ Inception v3
         Be careful, expects (299,299) sized images and has auxiliary output
         """
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.device = 'cpu'
+        # self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = device
 
-        model_ft = models.inception_v3(pretrained=None)
-        num_classes = 2
+        # model_ft = models.inception_v3(pretrained=None)
+        # num_classes = 2
+        #
+        # num_ftrs = model_ft.AuxLogits.fc.in_features
+        # model_ft.AuxLogits.fc = nn.Linear(num_ftrs, num_classes)
+        # # Handle the primary net
+        # num_ftrs = model_ft.fc.in_features
+        # model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        #
+        #
+        # model = model_ft
 
-        num_ftrs = model_ft.AuxLogits.fc.in_features
-        model_ft.AuxLogits.fc = nn.Linear(num_ftrs, num_classes)
-        # Handle the primary net
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, num_classes)
-        self.input_size = 299
+        # self.model = model
+        self.model = torch.load(model_path)
+        self.model.eval()
 
-        model = model_ft
+        #
+        # if model_path is not None:
+        #     self.model_path = model_path
+        #     # self.model = torch.load(model_path)
+        #     # self.model.load_state_dict(torch.load(self.model_path))
+        #     self.model = torch.load(self.model_path)
+        #     self.model.eval()
 
-        self.model = model
         self.model = self.model.to(self.device)
-        if model_path is not None:
-            self.model_path = model_path
-            # self.model = torch.load(model_path)
-            model.load_state_dict(torch.load(self.model_path, map_location=torch.device('cpu') ))
-            self.model.eval()
+        self.input_size = input_size
     #
     # def getModel(self, model_path):
     #     model = torch.load(model_path)
@@ -61,7 +69,7 @@ class ImageClassifier():
         return result.cpu().detach().numpy()
 
 
-ic = ImageClassifier('data/inception83.pth')
+ic = ImageClassifier('data/inception_all.pth')
 
 # 用于判断文件后缀
 def allowed_file(filename):
@@ -137,5 +145,6 @@ def download(filename):
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(host='127.0.0.1', debug=True, port=8070)
+    app.run(host='34.71.207.145', debug=False, port=8070)
+    # app.run(host='127.0.0.1', debug=True, port=8070)
 
